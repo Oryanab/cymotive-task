@@ -1,0 +1,5 @@
+
+GET https://vpxm539hp4.execute-api.eu-west-1.amazonaws.com/dev
+
+###
+GET http://localhost:3000/get
