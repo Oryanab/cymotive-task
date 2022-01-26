@@ -43,7 +43,6 @@ const buildResponse = (statusCode, body) => {
 };
 
 // Functions
-
 const addReportToBucket = async (reports) => {
   try {
     for (let report of reports) {
@@ -67,3 +66,31 @@ const addReportToBucket = async (reports) => {
     });
   }
 };
+
+// const addReportToBucket = async (report) => {
+//   console.log(report);
+//   await S3.putObject({
+//     Bucket: backetName,
+//     Key: `${report.vehicleId}.json`,
+//     Body: JSON.stringify(report),
+//   })
+//     .promise()
+//     .then(() => {
+//       console.log(buildResponse(200, { status: "success", report }));
+//       return buildResponse(200, { status: "success", report });
+//     })
+//     .catch((err) => {
+//       console.log(
+//         buildResponse(200, {
+//           status: "failure",
+//           error: err,
+//         })
+//       );
+//       return buildResponse(200, {
+//         status: "failure",
+//         error: err,
+//       });
+//     });
+// };
+
+// Functions

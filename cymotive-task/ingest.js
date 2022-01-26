@@ -3,7 +3,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = "ids-table";
 const backetName = "cymotive";
 const S3 = new AWS.S3();
-
+const { nanoid } = require("nanoid");
 /* 
   Save json data
 */
@@ -33,8 +33,13 @@ const returnJsonFromFile = async (params) => {
 };
 
 const storeJsonInDynamo = async (data) => {
+  const newReport = {
+    reportId: nanoid(),
+    numberOfAnomalies: returnNumberOfAnomalies(data.report.signalsPerMinute),
+    ...data.report,
+  };
   await dynamoDb
-    .put({ TableName: TABLE_NAME, Item: data.report })
+    .put({ TableName: TABLE_NAME, Item: newReport })
     .promise()
     .then(() => {
       console.log(`vehicle - ${data.report.vehicleId} - was added to db`);
@@ -44,4 +49,18 @@ const storeJsonInDynamo = async (data) => {
         `failed to add vehicle - ${data.report.vehicleId} - to db. Error: ${err}`
       );
     });
+};
+
+const returnNumberOfAnomalies = (obj) => {
+  const reportAnomalies = [obj.infotainment, obj.windows, obj.airBag];
+  const numberOfAnomalies = [];
+  reportAnomalies.forEach((item) => {
+    if (
+      item.sum > item.acceptableMaxValue ||
+      item.sum < item.acceptableMinValue
+    ) {
+      numberOfAnomalies.push(item);
+    }
+  });
+  return numberOfAnomalies.length;
 };
