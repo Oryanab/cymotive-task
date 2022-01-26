@@ -30,12 +30,11 @@ const returnNumberOfReports = async () => {
 function countUnique(iterable) {
   return new Set(iterable);
 }
-
 const uniqueId = [];
-countUnique(reports.map((item) => item.vehicleId)).forEach((item) =>
+countUnique(reports.map((item) => item.label)).forEach((item) =>
   uniqueId.push(item)
 );
-//.log(uniqueId.length);
+console.log(uniqueId.length);
 
 //  return the number of signals that their ‘sum’ value is out of the acceptable range.
 
@@ -74,7 +73,25 @@ const returnNumberOfAnomilies = () => {
   });
 
   console.log(`${numberOfAnomalies.length}/${allAnomalies.length}`);
-  console.log(numberOfAnomalies);
 };
 
-returnNumberOfAnomilies();
+//returnNumberOfAnomilies();
+
+// returnNumberOfReports
+const tryStuff = async () => {
+  const params = {
+    TableName: TABLE_NAME,
+    FilterExpression: "contains(signalsPerMinute, :signalsPerMinute)",
+  };
+  return await dynamoDb
+    .query(params)
+    .promise()
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+tryStuff();
